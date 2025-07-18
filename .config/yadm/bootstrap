@@ -24,16 +24,33 @@ echo "[+] Homebrew detected: $(brew --version | head -n1)"
 
 # Use appropriate Brewfile
 if [[ "$OS" == "Darwin" ]]; then
-	echo "[+] Running brew bundle using Brewfile.macos..."
+	echo "[+] Running brew bundle using .Brewfile##os.Darwin"
 	brew bundle --file="$BREWFILE_FILE"
 
-elif [[ "$OS" == "Linux" ]]; then
-	echo "[+] Running brew bundle using Brewfile.linux..."
+    FISH_PATH="$(which fish)"
+	if [[ -x "$FISH_PATH" ]]; then
+		if ! grep -Fxq "$FISH_PATH" /etc/shells; then
+			echo "[+] Adding $FISH_PATH to /etc/shells (requires sudo)"
+			echo "$FISH_PATH" | sudo tee -a /etc/shells
+		fi
+
+		if [[ "$SHELL" != "$FISH_PATH" ]]; then
+			echo "[+] Changing default shell to $FISH_PATH"
+			chsh -s "$FISH_PATH"
+	else
+		echo "[-] fish not found; please ensure it's installed via Homebrew"
+	fi
+
+elif [[ "$OS" == "WSL" ]]; then
+	echo "[+] Running brew bundle using .Brewfile##os.WSL"
 	brew bundle --file="$BREWFILE_FILE"
+
+    FISH_PATH="$(which fish)"
+    chsh -s "$FISH_PATH"
 
 else
 	echo "[-] Unsupported OS: $OS"
 	exit 1
-fi
+
 
 echo "[+] Done."
