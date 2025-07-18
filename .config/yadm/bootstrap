@@ -42,7 +42,8 @@ if [[ "$OS" == "Darwin" ]]; then
 		echo "[-] fish not found; please ensure it's installed via Homebrew"
 	fi
 
-elif [[ "$OS" == "WSL" ]]; then
+elif [[ "$OS" == "Linux" ]]; then
+    sudo apt-get install build-essential
 	echo "[+] Running brew bundle using .Brewfile##os.WSL"
 	brew bundle --file="$BREWFILE_FILE"
 
