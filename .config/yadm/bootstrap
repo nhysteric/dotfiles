@@ -4,7 +4,7 @@ set -euo pipefail
 
 # Detect platform
 OS="$(uname -s)"
-BREWFILE_FILE="$HOME/.config/yadm/.Brewfile"
+BREWFILE_FILE="$HOME/.Brewfile"
 
 # Check if brew is installed
 if ! command -v brew >/dev/null 2>&1; then
