@@ -27,37 +27,30 @@ if [[ "$OS" == "Darwin" ]]; then
 	echo "[+] Running brew bundle using .Brewfile##os.Darwin"
 	brew bundle --file="$BREWFILE_FILE"
 
-	FISH_PATH="$(which fish || true)"
-	if [[ -x "$FISH_PATH" ]]; then
-		if ! grep -Fxq "$FISH_PATH" /etc/shells; then
-			echo "[+] Adding $FISH_PATH to /etc/shells (requires sudo)"
-			echo "$FISH_PATH" | sudo tee -a /etc/shells
-		fi
-
-		if [[ "$SHELL" != "$FISH_PATH" ]]; then
-			echo "[+] Changing default shell to $FISH_PATH"
-			chsh -s "$FISH_PATH"
-		fi
-	else
-		echo "[-] fish not found; please ensure it's installed via Homebrew"
-	fi
-
 elif [[ "$OS" == "Linux" ]]; then
     sudo apt-get install build-essential
 	echo "[+] Running brew bundle using .Brewfile##os.WSL"
 	brew bundle --file="$BREWFILE_FILE"
-
-	FISH_PATH="$(which fish || true)"
-	if [[ -x "$FISH_PATH" ]]; then
-		echo "[+] Setting fish as default shell"
-		chsh -s "$FISH_PATH"
-	else
-		echo "[-] fish not found; please ensure it's installed via Homebrew"
-	fi
 
 else
 	echo "[-] Unsupported OS: $OS"
 	exit 1
 fi
 
+FISH_PATH="$(which fish || true)"
+if [[ -x "$FISH_PATH" ]]; then
+    if ! grep -Fxq "$FISH_PATH" /etc/shells; then
+        echo "[+] Adding $FISH_PATH to /etc/shells (requires sudo)"
+        echo "$FISH_PATH" | sudo tee -a /etc/shells
+    fi
+
+    if [[ "$SHELL" != "$FISH_PATH" ]]; then
+        echo "[+] Changing default shell to $FISH_PATH"
+        chsh -s "$FISH_PATH"
+    fi
+else
+    echo "[-] fish not found; please ensure it's installed via Homebrew"
+fi
+
+uv tools add ruff
 echo "[+] Done."
