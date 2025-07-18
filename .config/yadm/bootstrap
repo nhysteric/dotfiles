@@ -13,7 +13,7 @@ if ! command -v brew >/dev/null 2>&1; then
 	NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 	# Set up brew path
-	if [[ "$OS" == "Linux" ]]; then
+	if [[ "$OS" == "Linux" || "$OS" == "WSL" ]]; then
 		eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 	elif [[ "$OS" == "Darwin" ]]; then
 		eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -27,7 +27,7 @@ if [[ "$OS" == "Darwin" ]]; then
 	echo "[+] Running brew bundle using .Brewfile##os.Darwin"
 	brew bundle --file="$BREWFILE_FILE"
 
-    FISH_PATH="$(which fish)"
+	FISH_PATH="$(which fish || true)"
 	if [[ -x "$FISH_PATH" ]]; then
 		if ! grep -Fxq "$FISH_PATH" /etc/shells; then
 			echo "[+] Adding $FISH_PATH to /etc/shells (requires sudo)"
@@ -37,6 +37,7 @@ if [[ "$OS" == "Darwin" ]]; then
 		if [[ "$SHELL" != "$FISH_PATH" ]]; then
 			echo "[+] Changing default shell to $FISH_PATH"
 			chsh -s "$FISH_PATH"
+		fi
 	else
 		echo "[-] fish not found; please ensure it's installed via Homebrew"
 	fi
@@ -45,13 +46,17 @@ elif [[ "$OS" == "WSL" ]]; then
 	echo "[+] Running brew bundle using .Brewfile##os.WSL"
 	brew bundle --file="$BREWFILE_FILE"
 
-    FISH_PATH="$(which fish)"
-    chsh -s "$FISH_PATH"
+	FISH_PATH="$(which fish || true)"
+	if [[ -x "$FISH_PATH" ]]; then
+		echo "[+] Setting fish as default shell"
+		chsh -s "$FISH_PATH"
+	else
+		echo "[-] fish not found; please ensure it's installed via Homebrew"
+	fi
 
 else
 	echo "[-] Unsupported OS: $OS"
 	exit 1
-
 fi
 
 echo "[+] Done."
