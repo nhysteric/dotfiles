@@ -6,18 +6,18 @@ set -euo pipefail
 OS="$(uname -s)"
 BREWFILE_FILE="$HOME/.Brewfile"
 
+# Set up brew path
+if [[ "$OS" == "Linux" || "$OS" == "WSL" ]]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+elif [[ "$OS" == "Darwin" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
 # Check if brew is installed
 if ! command -v brew >/dev/null 2>&1; then
 	echo "[+] Installing Homebrew..."
 
 	NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-	# Set up brew path
-	if [[ "$OS" == "Linux" || "$OS" == "WSL" ]]; then
-		eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-	elif [[ "$OS" == "Darwin" ]]; then
-		eval "$(/opt/homebrew/bin/brew shellenv)"
-	fi
 fi
 
 echo "[+] Homebrew detected: $(brew --version | head -n1)"
