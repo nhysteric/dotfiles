@@ -1,5 +1,1 @@
-[user]
-	email = nhysteric@gmail.com
-	name = nhysteric
-[core]
-	editor = hx
+.config/yadm/alt/.gitconfig##default
