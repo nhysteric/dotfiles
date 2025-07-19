@@ -61,6 +61,7 @@ fi
 
 yadm remote remove origin
 yadm remote add origin git@github.com:nhysteric/dotfiles.git
+yadm fetch
 yadm branch --set-upstream-to=origin/master master
 
 uv tool install ruff
