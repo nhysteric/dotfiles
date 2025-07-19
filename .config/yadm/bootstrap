@@ -21,7 +21,7 @@ if ! command -v brew >/dev/null 2>&1; then
 
     if [[ "$OS" == "Darwin" ]]; then
         eval "$(/opt/homebrew/bin/brew shellenv)"
-    elif [[ "$OS" == "Linux" || "$OS" == "WSL" ]]; then
+    elif [[ "$OS" == "Linux" ]]; then
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
     fi
 fi
@@ -35,7 +35,7 @@ if [[ "$OS" == "Darwin" ]]; then
 
 elif [[ "$OS" == "Linux" ]]; then
     sudo apt-get install build-essential
-	echo "[+] Running brew bundle using .Brewfile##os.WSL"
+	echo "[+] Running brew bundle using .Brewfile##os.Default"
 	brew bundle --file="$BREWFILE_FILE"
 
 else
@@ -61,7 +61,7 @@ fi
 
 yadm remote remove origin
 yadm remote add origin git@github.com:nhysteric/dotfiles.git
-yadm push --set-upstream origin master
+yadm branch --set-upstream-to=origin/master master
 
-uv tools add ruff
+uv tool install ruff
 echo "[+] Done."
