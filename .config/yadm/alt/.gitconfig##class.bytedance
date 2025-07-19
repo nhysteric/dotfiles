@@ -1,0 +1,9 @@
+[user]
+        name = niuhaoyu.nhy
+        email = niuhaoyu.nhy@bytedance.com
+[url "ssh://niuhaoyu.nhy@git.byted.org:29418"]
+        insteadOf = https://git.byted.org
+[url "ssh://niuhaoyu.nhy@git.byted.org:29418"]
+        insteadOf = https://review.byted.org
+[url "git@code.byted.org:"]
+        insteadOf = https://code.byted.org/

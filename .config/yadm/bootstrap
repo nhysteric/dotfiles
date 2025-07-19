@@ -18,6 +18,12 @@ if ! command -v brew >/dev/null 2>&1; then
 	echo "[+] Installing Homebrew..."
 
 	NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+    if [[ "$OS" == "Darwin" ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    elif [[ "$OS" == "Linux" || "$OS" == "WSL" ]]; then
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    fi
 fi
 
 echo "[+] Homebrew detected: $(brew --version | head -n1)"
@@ -51,6 +57,11 @@ if [[ -x "$FISH_PATH" ]]; then
 else
     echo "[-] fish not found; please ensure it's installed via Homebrew"
 fi
+
+
+yadm remote remove origin
+yadm remote add origin git@github.com:nhysteric/dotfiles.git
+yadm push --set-upstream origin master
 
 uv tools add ruff
 echo "[+] Done."
