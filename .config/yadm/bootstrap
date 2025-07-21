@@ -1,5 +1,33 @@
 #!/usr/bin/env bash
+GREEN="\033[0;32m"
+RESET="\033[0m"
+# 设置 yadm class
+choose_yadm_class() {
+	local classes=("bytedance" "DSG") # ✅ 可扩展的 class 列表
+	echo -e "$GREEN"
+	echo "请选择 yadm 的 local.class："
+	echo "0) 不设置"
 
+	for i in "${!classes[@]}"; do
+		printf "%d) %s\n" $((i + 1)) "${classes[$i]}"
+	done
+
+	echo -e "$RESET"
+	read -rp "请输入编号: " choice
+	echo -e "$GREEN"
+	if [[ "$choice" == "0" ]]; then
+		echo "未设置 local.class"
+	elif [[ "$choice" =~ ^[1-9][0-9]*$ ]] && ((choice <= ${#classes[@]})); then
+		local class="${classes[$((choice - 1))]}"
+		yadm config local.class "$class"
+		echo "已设置 local.class 为 $(yadm config local.class)"
+	else
+		echo "无效选择，未设置 local.class"
+	fi
+}
+
+choose_yadm_class
+exit 0
 set -euo pipefail
 
 # Detect platform
@@ -8,9 +36,9 @@ BREWFILE_FILE="$HOME/.Brewfile"
 
 # Set up brew path
 if [[ "$OS" == "Linux" || "$OS" == "WSL" ]]; then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 elif [[ "$OS" == "Darwin" ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
+	eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
 # Check if brew is installed
@@ -19,11 +47,11 @@ if ! command -v brew >/dev/null 2>&1; then
 
 	NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-    if [[ "$OS" == "Darwin" ]]; then
-        eval "$(/opt/homebrew/bin/brew shellenv)"
-    elif [[ "$OS" == "Linux" ]]; then
-        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-    fi
+	if [[ "$OS" == "Darwin" ]]; then
+		eval "$(/opt/homebrew/bin/brew shellenv)"
+	elif [[ "$OS" == "Linux" ]]; then
+		eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+	fi
 fi
 
 echo "[+] Homebrew detected: $(brew --version | head -n1)"
@@ -34,7 +62,7 @@ if [[ "$OS" == "Darwin" ]]; then
 	brew bundle --file="$BREWFILE_FILE"
 
 elif [[ "$OS" == "Linux" ]]; then
-    sudo apt-get install build-essential
+	sudo apt-get install build-essential
 	echo "[+] Running brew bundle using .Brewfile##os.Default"
 	brew bundle --file="$BREWFILE_FILE"
 
@@ -45,22 +73,20 @@ fi
 
 FISH_PATH="$(which fish || true)"
 if [[ -x "$FISH_PATH" ]]; then
-    if ! grep -Fxq "$FISH_PATH" /etc/shells; then
-        echo "[+] Adding $FISH_PATH to /etc/shells (requires sudo)"
-        echo "$FISH_PATH" | sudo tee -a /etc/shells
-    fi
+	if ! grep -Fxq "$FISH_PATH" /etc/shells; then
+		echo "[+] Adding $FISH_PATH to /etc/shells (requires sudo)"
+		echo "$FISH_PATH" | sudo tee -a /etc/shells
+	fi
 
-    if [[ "$SHELL" != "$FISH_PATH" ]]; then
-        echo "[+] Changing default shell to $FISH_PATH"
-        chsh -s "$FISH_PATH"
-    fi
+	if [[ "$SHELL" != "$FISH_PATH" ]]; then
+		echo "[+] Changing default shell to $FISH_PATH"
+		chsh -s "$FISH_PATH"
+	fi
 else
-    echo "[-] fish not found; please ensure it's installed via Homebrew"
+	echo "[-] fish not found; please ensure it's installed via Homebrew"
 fi
 
-
-yadm remote remove origin
-yadm remote add origin git@github.com:nhysteric/dotfiles.git
+yadm remote set-url origin origin git@github.com:nhysteric/dotfiles.git
 yadm fetch
 yadm branch --set-upstream-to=origin/master master
 
