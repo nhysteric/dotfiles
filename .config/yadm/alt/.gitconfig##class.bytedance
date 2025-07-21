@@ -7,3 +7,5 @@
         insteadOf = https://review.byted.org
 [url "git@code.byted.org:"]
         insteadOf = https://code.byted.org/
+[core]
+	editor = hx

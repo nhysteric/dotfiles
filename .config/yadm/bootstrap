@@ -89,6 +89,7 @@ fi
 yadm remote set-url origin origin git@github.com:nhysteric/dotfiles.git
 yadm fetch
 yadm branch --set-upstream-to=origin/master master
+yadm decrypt
 
 uv tool install ruff
 echo "[+] Done."
