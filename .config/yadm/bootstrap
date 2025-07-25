@@ -26,6 +26,7 @@ choose_yadm_class() {
 	fi
 }
 
+yadm decrypt
 choose_yadm_class
 exit 0
 set -euo pipefail
@@ -89,7 +90,7 @@ fi
 yadm remote set-url origin origin git@github.com:nhysteric/dotfiles.git
 yadm fetch
 yadm branch --set-upstream-to=origin/master master
-yadm decrypt
+
 
 uv tool install ruff
 echo "[+] Done."
