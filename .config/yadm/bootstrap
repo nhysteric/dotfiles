@@ -28,7 +28,6 @@ choose_yadm_class() {
 
 yadm decrypt
 choose_yadm_class
-exit 0
 set -euo pipefail
 
 # Detect platform
