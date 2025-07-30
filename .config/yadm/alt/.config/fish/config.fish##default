@@ -1,0 +1,15 @@
+# === Homebrew 路径设置 ===
+# 仅当 Homebrew 已安装
+if test -f /home/linuxbrew/.linuxbrew/bin/brew
+    eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+end
+
+
+# === 清华镜像设置 ===
+# 设置 Homebrew 仓库镜像（加速国内访问）
+set -gx HOMEBREW_BREW_GIT_REMOTE https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git
+set -gx HOMEBREW_CORE_GIT_REMOTE https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git
+
+set -x GOPATH ~/go
+set -x PATH $PATH /usr/local/go/bin $GOPATH/bin ~/.local/bin
+starship init fish | source
